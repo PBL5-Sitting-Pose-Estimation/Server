@@ -13,7 +13,7 @@ const upload = multer({ storage: storageEngine })
 const app = express()
 
 app.use(cors({
-    origin: "*"
+    origin: "*",
 }))
 
 app.use(express.json())
@@ -33,23 +33,28 @@ DB_connect()
 
 const authRouter = require('./router/auth.js')
 const profileRouter = require('./router/profile.js')
+const imageRouter = require('./router/image.js')
+const imageSendRouter = require('./router/sendImg.js')
 
 app.use('/api/auth', authRouter)
 app.use('/api/profile', profileRouter)
+app.use('/api/img', imageRouter)
+app.use('/api/getimage', imageSendRouter)
 
-app.get("/", async(req, res) => {
-    const r = fs.createReadStream('./img/1.png')
-    const ps = new stream.PassThrough()
-    stream.pipeline(
-        r,
-        ps,
-        (err) => {
-            if(err) {
-                console.log(err)
-                return res.sendStatus(400);
+app.get("/", (req, res) => {
+    try{
+        return res.status(200).json({
+            success: true
+        })
+    }
+    catch(err){
+        return res.status(500).json({
+            success: false,
+            data: {
+                message: "Internal Server Error"
             }
         })
-    ps.pipe(res)
+    }
 })
 
 app.post('/test', upload.single('image'), (req, res) => {
