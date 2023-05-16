@@ -2,13 +2,6 @@ const express = require('express')
 const cors = require('cors')
 const fs = require('fs')
 const stream = require('stream')
-const multer = require('multer')
-const storageEngine = multer.diskStorage({
-    destination: "./img/test",
-    filename: (req, file, cb) => { cb(null, `${Date.now()}--${file.originalname}`); },
-});
-
-const upload = multer({ storage: storageEngine })
 
 const app = express()
 
@@ -35,19 +28,22 @@ const authRouter = require('./router/auth.js')
 const profileRouter = require('./router/profile.js')
 const imageRouter = require('./router/image.js')
 const imageSendRouter = require('./router/sendImg.js')
+const historyRouter = require('./router/history.js')
 
 app.use('/api/auth', authRouter)
 app.use('/api/profile', profileRouter)
 app.use('/api/img', imageRouter)
 app.use('/api/getimage', imageSendRouter)
+app.use('/api/history', historyRouter)
 
 app.get("/", (req, res) => {
-    try{
+    try {
         return res.status(200).json({
-            success: true
+            success: true,
+            version: "1.0.2",
+            lastUpdate: "10/5/2023"
         })
-    }
-    catch(err){
+    } catch(err) {
         return res.status(500).json({
             success: false,
             data: {
@@ -57,30 +53,36 @@ app.get("/", (req, res) => {
     }
 })
 
-app.post('/test', upload.single('image'), (req, res) => {
+var currentUser = ""
+var queue = []
 
-    var image = req.body
-
-    if(!image) return res.status(400).json({
-        success: false,
-        message: "Missing context"
-    })
-
+app.get("/current", (req, res) => {
     try {
-        fs.writeFile('test.png', image, function(err) {
-            if(err) throw err
-            console.log('File saved.');
-        });
+        if(currentUser) return res.status(200).json({
+            success: true,
+            data: {
+                currentUser: currentUser
+            }
+        })
+    } catch(err) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+})
+
+app.get("/test", (req, res) => {
+    try {
         return res.status(200).json({
             success: true
         })
     } catch(err) {
         return res.status(500).json({
-            success: false,
-            message: "Internal server error"
+            success: false
         })
     }
-});
+})
 
 app.listen(PORT, () => {
     console.log("server start on " + PORT)

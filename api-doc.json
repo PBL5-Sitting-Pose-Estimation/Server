@@ -1,0 +1,110 @@
+{
+    "localHostRootPath": "http://localhost:8080/api",
+    "hostingRootPath": "https://pbl5server.onrender.com/api",
+    "APIrouterPath": {
+        "auth": {
+            "login": {
+                "path": "/auth/login",
+                "method": "POST",
+                "body": {
+                    "username": {
+                        "type": "String",
+                        "require": true
+                    },
+                    "password": {
+                        "type": "String",
+                        "require": true
+                    }
+                },
+                "return": {
+                    "status-200": {
+                        "success": true,
+                        "data":{
+                            "accessToken": {
+                                "type": "String",
+                                "verifyBy": "JWT"
+                            },
+                            "displayName": {
+                                "type": "String"
+                            }
+                        }
+                    },
+                    "status-400": {
+                        "success": false,
+                        "message": {
+                            "type": "String",
+                            "data": "missing username or password"
+                        }
+                    },
+                    "status-500": {
+                        "success": false,
+                        "message": {
+                            "type": "String",
+                            "data": "itnernal server error"
+                        }
+                    }
+                }
+            },
+            "register": {
+                "path": "/auth/register",
+                "method": "POST",
+                "body": {
+                    "username": {
+                        "type": "String",
+                        "unique": true,
+                        "require": true
+                    },
+                    "password": {
+                        "type": "String",
+                        "require": true
+                    }
+                },
+                "return": {
+                    "status-200": {
+                        "success": true,
+                        "message": "user created"
+                    },
+                    "status-400": {
+                        "success": false,
+                        "message": "missing username or password || user existed"
+                    },
+                    "status-500": {
+                        "success": false,
+                        "message": "internal server error"
+                    }
+                }
+            }
+        },
+        "image": {
+            "avatar": {
+                "path": "/img/avatar/:params",
+                "method": "GET",
+                "parameters": {
+                    "accessToken": {
+                        "type": "String",
+                        "storedAt": "localstorage/useContext"
+                    }
+                },
+                "return": {
+                    "type": "image-data-stream"
+                }
+            },
+            "sendPoseImage": {
+                "path": "/img/pose",
+                "method": "POST",
+                "body": {
+                    "image": {
+                        "type": "image/jpg"
+                    }
+                },
+                "return": "currently no return"
+            },
+            "getPoseImage": {
+                "path": "/getImage/",
+                "method": "GET",
+                "parameters": "None",
+                "return": "recently post pose image"
+            }
+        }
+    }
+}
