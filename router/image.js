@@ -44,10 +44,12 @@ router.post('/pose', upload.single('image'), async(req, res) => {
         message: "Missing context"
     })
 
+    let filename = date.split("-").join('')
+
     try {
         fs.readFile(image.path, function (err, data) {
             if (err) throw err;
-            fs.writeFile('./img/history/' + date + '.jpg', data, function (err) {
+            fs.writeFile('./img/history/' + filename + '.jpg', data, function (err) {
                 if (err) throw err;
             });
         });
@@ -55,7 +57,7 @@ router.post('/pose', upload.single('image'), async(req, res) => {
         const newHistory = new History({
             predict_label: posture,
             detect_date: date,
-            path: date + '.jpg',
+            path: filename + '.jpg',
         })
 
         await newHistory.save()
