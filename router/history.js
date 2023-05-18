@@ -7,7 +7,32 @@ const router = express.Router()
 
 router.get('/', async(req, res) => {
     try {
-        let history = await History.find()
+        let histories = await History.find()
+        return res.status(200).json({
+            success: true,
+            data: histories
+        })
+    } catch(err) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+})
+
+router.get('/byid/:id', async(req, res) => {
+    const { id } = req.params
+
+    if(!id) {
+        return res.status(400).json({
+            success: false,
+            message: "Bad Request"
+        })
+    }
+
+    try {
+        let history = await History.findById(id)
+
         return res.status(200).json({
             success: true,
             data: history

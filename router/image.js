@@ -48,16 +48,16 @@ router.post('/pose', upload.single('image'), async(req, res) => {
 
     try {
         fs.readFile(image.path, function (err, data) {
-            if (err) throw err;
+            if (err) throw err
             fs.writeFile('./img/history/' + filename + '.jpg', data, function (err) {
-                if (err) throw err;
+                if (err) throw err
             });
-        });
+        })
 
         const newHistory = new History({
             predict_label: posture,
             detect_date: date,
-            path: filename + '.jpg',
+            path: filename + '.jpg'
         })
 
         await newHistory.save()
