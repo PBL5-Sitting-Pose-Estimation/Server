@@ -73,4 +73,24 @@ router.post('/pose', upload.single('image'), async(req, res) => {
     }
 })
 
+router.post('/pose/unsave', upload.single('image'), async(req, res) => {
+    let image = req.file
+
+    if(!image) return res.status(400).json({
+        success: false,
+        message: "Missing context"
+    })
+
+    try {
+        return res.status(200).json({
+            success: true
+        })
+    } catch(err) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+})
+
 module.exports = router
