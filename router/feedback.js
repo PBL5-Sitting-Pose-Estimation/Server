@@ -18,6 +18,7 @@ router.post("/", async(req, res) => {
         let history = await History.findById(id)
 
         history.got_feedback = true
+        history.user_label = user_label
         
         const fb = new FeedBack({
             history_id: id,

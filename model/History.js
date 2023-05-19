@@ -15,6 +15,10 @@ const historySchema = new Schema({
     got_feedback: {
         type: Boolean,
         default: false
+    },
+    user_label: {
+        type: String,
+        default: ""
     }
 })
 
