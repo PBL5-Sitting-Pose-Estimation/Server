@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.get('/', async(req, res) => {
     try {
-        let histories = await History.find()
+        let histories = await History.find().sort({ _id: -1 }).limit(15)
         return res.status(200).json({
             success: true,
             data: histories
